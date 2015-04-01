@@ -44,7 +44,7 @@ module BulkLoad
 
   ## Resource definitions
 
-  class BulkLoad < ToHashStruct.new(:config, :name, :cron, :timezone, :delay, :database, :table)
+  class BulkLoad < ToHashStruct.new(:config, :name, :cron, :timezone, :delay, :time_column, :database, :table)
     class BulkLoadSessionConfig < ToHashStruct.new(:type, :access_key_id, :secret_access_key, :endpoint, :bucket, :path_prefix, :parser, :decoders)
       def validate_self
         validate_presence_of :type
@@ -121,7 +121,7 @@ module BulkLoad
   def bulk_load_create(name, database, table, job, opts = {})
     job = job.dup
     job['name'] = name
-    [:cron, :timezone, :delay].each do |prop|
+    [:cron, :timezone, :delay, :time_column].each do |prop|
       job[prop.to_s] = opts[prop] if opts.key?(prop)
     end
     job['database'] = database
